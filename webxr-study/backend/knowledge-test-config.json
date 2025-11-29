@@ -1,0 +1,48 @@
+{
+  "cardpool": {
+    "objects": [
+      { "label": "Ampulle", "code": "f" },
+      { "label": "Handschuhe", "code": "q" },
+      { "label": "Tupfer", "code": "w" },
+      { "label": "Hände", "code": "k" },
+      { "label": "Ampullenettikett", "code": "g" },
+      { "label": "Kolben der Spritze", "code": "e" },
+      { "label": "Spritze und Tupfer", "code": "a" },
+      { "label": "Arzneimittel", "code": "j" },
+      { "label": "Suppenkelle", "code": "l" },
+      { "label": "Schutzkappe", "code": "t" },
+      { "label": "Kanüle", "code": "r" },
+      { "label": "Patronenhalter", "code": "m" },
+      { "label": "Schutzfolie", "code": "i" },
+      { "label": "Linker Mittelfinger und linker Zeigefinger", "code": "h" },
+      { "label": "Linke Hand", "code": "g" },
+      { "label": "Injektionsstelle", "code": "d" }
+
+
+
+    ],
+    "verbs": [
+      { "label": "markieren", "code": "G" },
+      { "label": "mit Pflaster abdecken", "code": "B" },
+      { "label": "vollständig entlüften", "code": "T" },
+      { "label": "desinfizieren", "code": "L" },
+      { "label": "ertasten vorderen oberen Darmbeinstachel und den Darmbeinkamm", "code": "K" },
+      { "label": "zur Aspiration leicht zurückziehen", "code": "A" },
+      { "label": "zusammenstecken", "code": "Q" },
+      { "label": "anziehen", "code": "D" },
+      { "label": "leicht schräg halten", "code": "S" },
+      { "label": "von Kanüle entfernen", "code": "N" },
+      { "label": "aus der Haut ziehen", "code": "F" },
+      { "label": "mit Tupfer komprimieren", "code": "I" },
+      { "label": "im Spritzenabwurf abstreifen", "code": "H" },
+      { "label": "in Muskel stechen", "code": "J" },
+      { "label": "in den Mülleimer werfen", "code": "C" },
+      { "label": "injizieren", "code": "E" },
+      { "label": "bauchwärts drehen", "code": "O" },
+      { "label": "öffnen", "code": "R" }
+      
+    ]
+  },
+  "correctAnswer": "kLqDhKgOdGdLtNrJeAjErFdIrHaCdBqC"
+}
+

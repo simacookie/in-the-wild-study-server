@@ -1,0 +1,962 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Wissenstest - Intramuskuläre Injektion</title>
+    <meta name="description" content="Wissenstest für die Intramuskuläre Injektion">
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <style>
+        body { 
+            padding: 30px; 
+            margin: 0; 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #ffffff;
+            height: 100vh;
+            overflow-y: auto;
+            color: #1a1a1a;
+            position: relative;
+        }
+                
+        
+        .content-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .test-container {
+            display: flex;
+            gap: 2rem;
+            flex-wrap: wrap;
+            margin-bottom: 2rem;
+        }
+        
+        .pool-section {
+            flex: 1;
+            min-width: 250px;
+            position: sticky;
+            top: 20px;
+            align-self: flex-start;
+            max-height: calc(100vh - 140px);
+            overflow-y: auto;
+        }
+        
+        .pool-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #1a1a1a;
+        }
+        
+        .explanation-container {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            border-radius: 0.375rem;
+            font-size: 0.875rem;
+            color: #475569;
+            line-height: 1.5;
+            gap: 3rem;
+        }
+        
+        .explanation-left,
+        .explanation-right {
+            flex: 1;
+            background: #f1f5f9;
+            padding: 0.75rem;
+            border-radius: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .info-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            vertical-align: middle;
+            width: 27px;
+            height: 27px;
+            border-radius: 50%;
+            background-color: #0f6cbf;
+            color: white;
+            font-size: 1.7rem;
+            font-weight: 700;
+            flex-shrink: 0;
+            line-height: 1;
+            
+        }
+
+        .info-icon-content {
+            transform: translateY(-1.5px);
+        }
+        .explanation-text {
+            flex: 1;
+        }
+        
+        .pool {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.75rem;
+            padding: 1rem;
+            background: #f8fafc;
+            border: 2px dashed #cbd5e1;
+            border-radius: 0.5rem;
+            min-height: 200px;
+        }
+        
+        .card {
+            padding: 0.75rem 1rem;
+            background: white;
+            border: 2px solid #e5e7eb;
+            border-radius: 0.5rem;
+            cursor: grab;
+            user-select: none;
+            transition: all 0.2s ease;
+            font-weight: 500;
+        }
+        
+        .card:hover {
+            border-color: #0f6cbf;
+            background: #eff6ff;
+            transform: translateY(-2px);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .card:active {
+            cursor: grabbing;
+        }
+        
+        .card.dragging {
+            opacity: 0.5;
+        }
+        
+        .sequence-section {
+            flex: 2;
+            min-width: 300px;
+        }
+        
+        .sequence-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #1a1a1a;
+        }
+        
+        .sequence {
+            display: flex;
+            flex-direction: column;
+            padding: 1rem 1rem 1rem 4rem;
+            background: #f8fafc;
+            border: 2px solid #cbd5e1;
+            border-radius: 0.5rem;
+            min-height: 200px;
+        }
+        
+        .pair-container {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+            padding: 0.75rem;
+            padding-left: 3rem;
+            background: white;
+            border: 2px solid #e5e7eb;
+            border-radius: 0.5rem;
+            position: relative;
+            cursor: move;
+            transition: all 0.2s ease;
+        }
+
+        .pair-number {
+            position: absolute;
+            left: -2rem;
+            transform: translateX(-50%);
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #cbd5e1;
+        }
+        
+        .pair-container:hover {
+            border-color: #0f6cbf;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .pair-container.dragging-pair {
+            opacity: 0.5;
+        }
+        
+        .drop-zone-container {
+            height: 50px;
+            margin: 0.25rem 0;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .drop-zone {
+            width: 100%;
+            height: 100%;
+            border-radius: 0.5rem;
+            transition: all 0.3s ease;
+            border: 2px dashed #0f6dbf00;
+            background: rgba(239, 246, 255, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: absolute;
+            top: 0;
+            left: 0;
+            opacity: 1;
+        }
+        
+        .drop-zone:hover,
+        .drop-zone.active {
+            opacity: 1;
+            border-color: #0f6cbf;
+            background: #eff6ff;
+            box-shadow: 0 0 0 3px rgba(15, 108, 191, 0.1);
+            border: 2px dashed #0f6cbf;
+
+        }
+        
+        .drop-zone-indicator {
+            color: #0f6cbf;
+            font-size: 0.875rem;
+            font-weight: 600;
+            opacity: 0.7;
+            transition: opacity 0.2s ease;
+            pointer-events: none;
+        }
+        
+        .drop-zone:hover .drop-zone-indicator,
+        .drop-zone.active .drop-zone-indicator {
+            opacity: 1;
+        }
+        
+        .add-step-btn {
+            padding: 0;
+            background: #0f6cbf;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.5rem;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            width: 30px;
+            height: 30px;
+            position: absolute;
+            top: 50%;
+            left: calc(50% + 33px);
+            transform: translate(-50%, -50%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1;
+        }
+
+        
+        .add-step-btn:hover {
+            background: #3b80bd;
+            transform: translate(-50%, -50%) scale(1.1);
+        }
+        
+        .add-step-btn.first,
+        .add-step-btn.last {
+            left: calc(50%);
+            transform: translate(-50%, -50%);
+        }
+        
+        .add-step-btn.first:hover,
+        .add-step-btn.last:hover {
+            transform: translate(-50%, -50%) scale(1.1);
+        }
+        .add-step-btn-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -57%);
+            font-size: 1rem;
+            font-weight: 700;
+        }
+
+        
+        
+        .btn-text {
+            position: absolute;
+            left: calc(50% + 23px);
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1rem;
+            white-space: nowrap;
+            color: #1a1a1a;
+            font-weight: 500;
+        }
+        
+        .arrow-connector {
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: #cbd5e1;
+            transform: translateX(-50%);
+        }
+        
+        .arrow-connector::after {
+            content: '';
+            position: absolute;
+            bottom: 0px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 6px solid transparent;
+            border-right: 6px solid transparent;
+            border-top: 8px solid #cbd5e1;
+        }
+        
+        .drop-zone-container.last {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        
+        .drag-handle {
+            position: absolute;
+            left: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: grab;
+            color: #64748b;
+            font-size: 1.25rem;
+            line-height: 1;
+        }
+        
+        .drag-handle:active {
+            cursor: grabbing;
+        }
+        
+        .socket {
+            flex: 1;
+            padding: 0.75rem 1rem;
+            background: #f1f5f9;
+            border: 2px dashed #94a3b8;
+            border-radius: 0.375rem;
+            min-height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #64748b;
+            font-size: 0.875rem;
+        }
+        
+        .socket.has-content {
+            background: white;
+            border: 2px solid #0f6cbf;
+            color: #1a1a1a;
+        }
+        
+        .socket.empty {
+            background: #f1f5f9;
+            border: 2px dashed #94a3b8;
+        }
+        
+        .delete-pair-btn {
+            padding: 0.5rem;
+            background: #ef4444;
+            color: white;
+            border: none;
+            border-radius: 0.375rem;
+            cursor: pointer;
+            font-size: 0.875rem;
+            transition: all 0.2s ease;
+        }
+        
+        .delete-pair-btn:hover {
+            background: #dc2626;
+        }
+        
+        .add-pair-btn {
+            padding: 0.75rem;
+            background: #10b981;
+            color: white;
+            border: none;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            margin-top: 0.5rem;
+            width: 100%;
+        }
+        
+        .add-pair-btn:hover {
+            background: #059669;
+        }
+        
+        .result-section {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: #f8fafc;
+            border-radius: 0.5rem;
+            border: 2px solid #e5e7eb;
+        }
+        
+        .result-title {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #1a1a1a;
+        }
+        
+        .result-string {
+            font-size: 1.5rem;
+            font-weight: 700;
+            font-family: monospace;
+            color: #0f6cbf;
+            padding: 0.75rem;
+            background: white;
+            border-radius: 0.375rem;
+            border: 2px solid #0f6cbf;
+        }
+        
+        .title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            margin-top: 0px;
+            color: #1a1a1a;
+            letter-spacing: -0.025em;
+            line-height: 1.1;
+        }
+        
+        .subtitle {
+            font-size: 1.25rem;
+            margin-bottom: 2.5rem;
+            color: #6b7280;
+            font-weight: 400;
+        }
+        
+        .btn {
+            padding: 1rem 2.5rem;
+            background-color: #0f6cbf;
+            color: white;
+            font-size: 1.125rem;
+            font-weight: 600;
+            border-radius: 0.5rem;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+            display: inline-block;
+            min-width: 200px;
+            letter-spacing: 0.025em;
+        }
+        
+        .btn:hover {
+            background-color: #0d5aa3;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        
+        .btn:active {
+            transform: translateY(0);
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+        }
+        
+        .btn-back {
+            background-color: #6b7280;
+            margin-top: 2rem;
+        }
+        
+        .btn-back:hover {
+            background-color: #4b5563;
+        }
+        
+        #button-left {
+            position: absolute;
+            bottom: 24px;
+            left: 24px;
+            z-index: 1;
+        }
+        
+        #button-right {
+            position: absolute;
+            bottom: 24px;
+            right: 24px;
+            z-index: 1;
+        }
+        
+        .footer-btn {
+            padding: 0.75rem 1.25rem;
+            background-color: #0f6cbf;
+            color: white;
+            font-size: 0.875rem;
+            font-weight: 500;
+            border-radius: 0.375rem;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+        }
+        
+        .footer-btn:hover {
+            background-color: #0f6cbf;
+            color: white;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .main-content {
+                padding: 2rem 1.5rem;
+                margin: 1rem;
+            }
+            
+            .title {
+                font-size: 2rem;
+            }
+            
+            .subtitle {
+                font-size: 1.125rem;
+            }
+            
+            .btn {
+                font-size: 1rem;
+                padding: 0.875rem 2rem;
+            }
+            
+            #button-left, #button-right {
+                bottom: 16px;
+            }
+            
+            #button-left {
+                left: 16px;
+            }
+            
+            #button-right {
+                right: 16px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .main-content {
+                padding: 1.5rem 1rem;
+            }
+            
+            .title {
+                font-size: 1.875rem;
+            }
+            
+            .subtitle {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <div class="container">
+            <div class="main-content">
+                <div class="content-header">
+                    <h1 class="title">Wissenstest</h1>
+                    <p class="subtitle">Baue den Pflegeprozess vom Ausmessen der Injektionsstelle bis hin zum wegwerfen der Spritze nach.</p>
+                </div>
+                
+                <div class="test-container">
+                    <div style="width: 100%; margin-bottom: 1.5rem;">
+                        <div class="explanation-container">
+                            <div class="explanation-left">
+                                <span class="info-icon" >
+                                    <div class="info-icon-content">ℹ</div>
+                                </span>
+                                <span class="explanation-text">Ein Schritt wird aus einem Objekt und einer dazugehörigen Aktion zusammengebaut. Beispiel: "Handschuhe" + "anziehen"</span>
+                            </div>
+                            <div class="explanation-right">
+                                <span class="info-icon">
+                                    <div class="info-icon-content">ℹ</div>
+                                </span>
+                                <span class="explanation-text">Rechts sollst du den Pflegeprozess zusammenbauen, indem du Objekte und Aktionen per Drag & Drop in die Sockel legst. Du kannst die die Reihenfolge der Schritte auch nachträglich ändern, indem du die Schritte per Drag & Drop verschiebst.</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="pool-section">
+                        <div class="pool-title">Objekte</div>
+                        <div class="pool" @drop.prevent="onDrop($event, 'object')" @dragover.prevent @dragenter.prevent>
+                            <div 
+                                v-for="object in objects" 
+                                :key="object.code"
+                                class="card"
+                                draggable="true"
+                                @dragstart="onDragStart($event, 'object', object)"
+                                @dragend="onDragEnd">
+                                {{ object.label }}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="pool-section">
+                        <div class="pool-title">Aktionen</div>
+                        <div class="pool" @drop.prevent="onDrop($event, 'verb')" @dragover.prevent @dragenter.prevent>
+                            <div 
+                                v-for="verb in verbs" 
+                                :key="verb.code"
+                                class="card"
+                                draggable="true"
+                                @dragstart="onDragStart($event, 'verb', verb)"
+                                @dragend="onDragEnd">
+                                {{ verb.label }}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="sequence-section">
+                        <div class="sequence-title">Prozess</div>
+                        <div class="sequence">
+                            <template v-for="(pair, pairIndex) in pairs" :key="pair.id">
+                                <!-- Drop Zone Container before each pair -->
+                                <div class="drop-zone-container">
+                                    <div 
+                                        v-if="draggingPairIndex !== null"
+                                        class="drop-zone"
+                                        :class="{ 'active': dropZoneIndex === pairIndex }"
+                                        @drop.prevent="onDropInZone($event, pairIndex)"
+                                        @dragover.prevent 
+                                        @dragenter.prevent="handleDropZoneEnter(pairIndex)"
+                                        @dragleave="handleDropZoneLeave">
+                                        <div class="drop-zone-indicator">↓ Hier einfügen</div>
+                                    </div>
+                                    <div v-else style="position: relative; width: 100%; height: 100%;">
+                                        <div v-if="pairIndex > 0" class="arrow-connector"></div>
+                                        <button 
+                                            :class="['add-step-btn', pairIndex === 0 ? 'first' : '']"
+                                            @click="addPair(pairIndex)">
+                                            <div class="add-step-btn-content">+</div>
+                                        </button>
+                                    </div>
+                                </div>
+                                
+                                <div 
+                                    class="pair-container"
+                                    :class="{ 
+                                        'dragging-pair': draggingPairIndex === pairIndex
+                                    }"
+                                    draggable="true"
+                                    @dragstart="onDragPairStart($event, pairIndex)"
+                                    @dragend="onDragPairEnd"
+                                    @drop.prevent="onDropInPair($event, pairIndex)"
+                                    @dragover.prevent>
+                                    <div class="pair-number">{{ pairIndex + 1 }}.</div>
+                                    <div class="drag-handle">⋮⋮</div>
+                                    <div 
+                                        class="socket"
+                                        :class="pair.object ? 'has-content' : 'empty'"
+                                        @drop.prevent="onDropInSocket($event, pairIndex, 'object')"
+                                        @dragover.prevent>
+                                        <span v-if="pair.object">{{ pair.object.label }}</span>
+                                        <span v-else>Objekt</span>
+                                    </div>
+                                    <div 
+                                        class="socket"
+                                        :class="pair.verb ? 'has-content' : 'empty'"
+                                        @drop.prevent="onDropInSocket($event, pairIndex, 'verb')"
+                                        @dragover.prevent>
+                                        <span v-if="pair.verb">{{ pair.verb.label }}</span>
+                                        <span v-else>Aktion</span>
+                                    </div>
+                                    <button class="delete-pair-btn" @click="deletePair(pairIndex)">×</button>
+                                </div>
+                            </template>
+                            
+                            <!-- Drop Zone Container at the end -->
+                            <div class="drop-zone-container last">
+                                <div 
+                                    v-if="draggingPairIndex !== null"
+                                    class="drop-zone"
+                                    :class="{ 'active': dropZoneIndex === pairs.length }"
+                                    @drop.prevent="onDropInZone($event, pairs.length)"
+                                    @dragover.prevent 
+                                    @dragenter.prevent="handleDropZoneEnter(pairs.length)"
+                                    @dragleave="handleDropZoneLeave">
+                                    <div class="drop-zone-indicator">↓ Hier einfügen</div>
+                                </div>
+                                <template v-else>
+                                    <div style="position: relative; width: 100%; height: 100%;">
+                                        <button 
+                                            class="add-step-btn last"
+                                            @click="addPair()">
+                                            <div class="add-step-btn-content">+</div>
+                                        </button>
+                                        <span class="btn-text">Schritt hinzufügen</span>
+                                    </div>
+                                </template>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                                
+                <div style="text-align: center; margin-top: 2rem;">
+                    <button class="btn" @click="submitResult" style="margin-right: 1rem;">Ergebnis absenden</button>
+                    <button class="btn btn-back" @click="goBack">Zurück zur Startseite</button>
+                </div>
+
+            </div>
+            
+        </div>
+    </div>
+    
+    <script>
+        // Cookie handling function
+        function getCookie(name) {
+            const nameEQ = name + "=";
+            const ca = document.cookie.split(';');
+            for (let i = 0; i < ca.length; i++) {
+                let c = ca[i];
+                while (c.charAt(0) === ' ') c = c.substring(1, c.length);
+                if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
+            }
+            return null;
+        }
+        
+        const { createApp } = Vue;
+        
+        createApp({
+            data() {
+                return {
+                    objects: [],
+                    verbs: [],
+                    pairs: [],
+                    draggingItem: null,
+                    draggingType: null,
+                    draggingPairIndex: null,
+                    draggingPairOverIndex: null,
+                    dropZoneIndex: null
+                };
+            },
+            computed: {
+                resultString() {
+                    if (this.pairs.length === 0) return '';
+                    
+                    let result = '';
+                    for (const pair of this.pairs) {
+                        if (pair.object) {
+                            result += pair.object.code;
+                        }
+                        if (pair.verb) {
+                            result += pair.verb.code;
+                        }
+                    }
+                    return result;
+                }
+            },
+            methods: {
+                onDragStart(event, type, item) {
+                    this.draggingItem = item;
+                    this.draggingType = type;
+                    event.dataTransfer.effectAllowed = 'move';
+                    event.target.classList.add('dragging');
+                },
+                onDragEnd(event) {
+                    event.target.classList.remove('dragging');
+                    this.draggingItem = null;
+                    this.draggingType = null;
+                },
+                onDrop(event, type) {
+                    // Drop in pool - do nothing, cards stay in pool
+                    event.preventDefault();
+                },
+                onDropInPair(event, pairIndex) {
+                    // Don't handle pair reordering here - use drop zones
+                    // Only handle dropping items into pair
+                    if (this.draggingItem && this.draggingType && this.draggingPairIndex === null) {
+                        const pair = this.pairs[pairIndex];
+                        if (this.draggingType === 'object') {
+                            // Clone the object
+                            pair.object = { ...this.draggingItem };
+                        } else if (this.draggingType === 'verb') {
+                            // Clone the verb
+                            pair.verb = { ...this.draggingItem };
+                        }
+                    }
+                },
+                onDropInSocket(event, pairIndex, socketType) {
+                    // Prevent dropping if dragging a pair
+                    if (this.draggingPairIndex !== null) {
+                        event.preventDefault();
+                        return;
+                    }
+                    if (this.draggingItem && this.draggingType) {
+                        const pair = this.pairs[pairIndex];
+                        // Only allow dropping if types match
+                        if (socketType === 'object' && this.draggingType === 'object') {
+                            pair.object = { ...this.draggingItem };
+                        } else if (socketType === 'verb' && this.draggingType === 'verb') {
+                            pair.verb = { ...this.draggingItem };
+                        }
+                    }
+                    event.stopPropagation(); // Prevent triggering pair drop
+                },
+                onDragPairStart(event, pairIndex) {
+                    // Allow dragging even if pair is empty
+                    this.draggingPairIndex = pairIndex;
+                    event.dataTransfer.effectAllowed = 'move';
+                    event.dataTransfer.setData('text/plain', pairIndex.toString());
+                },
+                onDragPairEnd() {
+                    this.draggingPairIndex = null;
+                    this.draggingPairOverIndex = null;
+                    this.dropZoneIndex = null;
+                },
+                handleDropZoneEnter(zoneIndex) {
+                    if (this.draggingPairIndex !== null) {
+                        this.dropZoneIndex = zoneIndex;
+                    }
+                },
+                handleDropZoneLeave(event) {
+                    // Only clear if we're really leaving the drop zone
+                    const relatedTarget = event.relatedTarget;
+                    if (!relatedTarget || !event.currentTarget.contains(relatedTarget)) {
+                        // Small delay to prevent flickering
+                        setTimeout(() => {
+                            const elementBelow = document.elementFromPoint(event.clientX, event.clientY);
+                            if (!elementBelow || !elementBelow.closest('.drop-zone')) {
+                                this.dropZoneIndex = null;
+                            }
+                        }, 10);
+                    }
+                },
+                onDropInZone(event, targetIndex) {
+                    if (this.draggingPairIndex !== null) {
+                        const sourceIndex = this.draggingPairIndex;
+                        
+                        // Don't drop on itself or adjacent position
+                        if (sourceIndex === targetIndex || sourceIndex === targetIndex - 1) {
+                            this.draggingPairIndex = null;
+                            this.dropZoneIndex = null;
+                            return;
+                        }
+                        
+                        // Remove from source position
+                        const pair = this.pairs.splice(sourceIndex, 1)[0];
+                        
+                        // Adjust target index if source was before target
+                        let adjustedTargetIndex = targetIndex;
+                        if (sourceIndex < targetIndex) {
+                            adjustedTargetIndex = targetIndex - 1;
+                        }
+                        
+                        // Insert at target position
+                        this.pairs.splice(adjustedTargetIndex, 0, pair);
+                    }
+                    this.draggingPairIndex = null;
+                    this.dropZoneIndex = null;
+                },
+                addPair(index) {
+                    const newPair = {
+                        id: Date.now(),
+                        object: null,
+                        verb: null
+                    };
+                    
+                    if (index !== undefined && index !== null) {
+                        // Insert at specific index
+                        this.pairs.splice(index, 0, newPair);
+                    } else {
+                        // Add at the end (default behavior)
+                        this.pairs.push(newPair);
+                    }
+                },
+                deletePair(index) {
+                    this.pairs.splice(index, 1);
+                },
+                  deletePair(index) {
+                    this.pairs.splice(index, 1);
+                },
+                loadConfig() {
+                    fetch('/api/knowledge-test-config')
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error('Network response was not ok');
+                            }
+                            return response.json();
+                        })
+                        .then(data => {
+                            this.objects = data.objects || [];
+                            this.verbs = data.verbs || [];
+                        })
+                        .catch(error => {
+                            console.error('Error loading config:', error);
+                            alert('Fehler beim Laden der Konfiguration. Bitte Seite neu laden.');
+                        });
+                },
+                async submitResult() {
+                    if (!this.resultString) {
+                        alert('Bitte erstelle zuerst eine Sequenz.');
+                        return;
+                    }
+                    
+                    // Get user_id from cookie
+                    const userId = getCookie('user_id');
+                    if (!userId) {
+                        alert('Keine Benutzer-ID gefunden. Entweder hast du die Datenerfassung beim Start der Evaluation abgelehnt oder du hast die Evaluation nicht von der Startseite gestartet. Bitte starte die Evaluation von der Startseite und akzeptiere die Datenerfassung, um deine Antwort abzuschicken.');
+                        return;
+                    }
+                    
+                    try {
+                        const response = await fetch('/api/knowledge-test-answer', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({ 
+                                user_id: userId,
+                                answer: this.resultString })
+                        });
+                        
+                        if (response.status === 409) {
+                            const errorData = await response.json();
+                            if (errorData.errorCode === "DUPLICATE_ENTRY") {
+                                alert('Du hast bereits ein Ergebnis abgeschickt.');
+                                return;
+                            }
+                        }
+                        
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        
+                        const data = await response.json();
+                        alert(JSON.stringify(data));
+                    } catch (error) {
+                        console.error('Error:', error);
+                        alert('Fehler beim Übermitteln des Ergebnisses. Bitte versuchen Sie es erneut.');
+                    }
+                },
+                goBack() {
+                    window.location.href = '/';
+                }
+            },
+            mounted() {
+                // Load configuration from API
+                this.loadConfig();
+                // Initialize with one empty pair
+                this.addPair();
+            }
+        }).mount('#app');
+    </script>
+</body>
+</html>
+

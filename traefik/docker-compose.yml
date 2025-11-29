@@ -1,0 +1,49 @@
+services:
+  traefik:
+    image: traefik:3.6
+    container_name: traefik
+    restart: unless-stopped
+    networks:
+      - proxy
+    ports:
+      - "80:80"
+      - "443:443"
+    command:
+      - "--log.level=INFO"
+  
+      # Providers
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--providers.docker.network=proxy"
+      - "--providers.file.directory=/etc/traefik/dynamic"
+      - "--providers.file.watch=true"
+
+      # Entrypoints
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.web.http.redirections.entryPoint.to=websecure"
+      - "--entrypoints.web.http.redirections.entryPoint.scheme=https"
+      - "--entrypoints.web.http.redirections.entryPoint.permanent=true"
+      - "--entrypoints.websecure.address=:443"
+      # OPTIONAL: make websecure default to TLS (lets routers skip 'tls=true')
+      - "--entrypoints.websecure.http.tls=true"
+
+      # Dashboard (enabled but not published)
+      - "--api.dashboard=true"
+
+      # ACME HTTP-01 (Let’s Encrypt)
+      # We use a cert file from the ITSC instead of letsencrypt
+      # - "--certificatesresolvers.letsencrypt.acme.email=t.hentschel@uni-luebeck.de"
+      # - "--certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json"
+      # - "--certificatesresolvers.letsencrypt.acme.httpchallenge=true"
+      # - "--certificatesresolvers.letsencrypt.acme.httpchallenge.entrypoint=web"
+      # (Optional) access logs:
+      # - "--accesslog=true"
+    volumes:
+      # - ./letsencrypt:/letsencrypt
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./dynamic:/etc/traefik/dynamic:ro     # <-- dynamic config + cert paths
+      - ./certs:/etc/traefik/certs:ro         # <-- your PEM files
+
+networks:
+  proxy:
+    external: true

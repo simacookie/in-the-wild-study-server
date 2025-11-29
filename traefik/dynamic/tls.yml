@@ -1,0 +1,14 @@
+tls:
+  # Option A: set a default cert for all TLS routers
+  stores:
+    default:
+      defaultCertificate:
+        certFile: /etc/traefik/certs/Cert.pem
+        keyFile: /etc/traefik/certs/privateKey-dec.pem
+
+  # Option B: (optional) list specific certs for specific domains
+  # certificates:
+  #   - certFile: /etc/traefik/certs/fullchain.pem
+  #     keyFile:  /etc/traefik/certs/privkey.pem
+  #     stores:
+  #       - default

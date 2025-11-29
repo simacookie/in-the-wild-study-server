@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- ... -->
+    <meta charset="utf-8">
+
+    <link href="https://unpkg.com/survey-core/survey-core.min.css" type="text/css" rel="stylesheet">
+    <script type="text/javascript" src="https://unpkg.com/survey-core/survey.core.min.js"></script>
+    <script type="text/javascript" src="https://unpkg.com/survey-js-ui/survey-js-ui.min.js"></script>
+    <!-- ... -->
+</head>
+<body>
+    <div id="surveyContainer"></div>
+</body>
+<script>
+    const surveyJson = {
+    title: "System Usability Scale",
+    description: "Bitte überprüfen Sie die Antwort, die Ihre sofortige Antwort auf jede Aussage widerspiegelt. Bitte denken Sie nicht zu lange über jede Aussage nach und stellen Sie sicher, dass Sie zu allen Aussagen eine Antwort geben.",
+    elements: [{
+        type: "radiogroup",
+        name: "question1",
+        title: "Ich denke, dass ich dieses Produkt häufig verwenden möchte",
+        isRequired: true,
+        choices: [
+            { value: 1, text: "Stimme überhaupt nicht zu - 1" },
+            { value: 2, text: "2" },
+            { value: 3, text: "3" },
+            { value: 4, text: "4" },
+            { value: 5, text: "Stimme voll und ganz zu - 5" }
+        ],
+        colCount: 5
+    }, {
+        type: "radiogroup",
+        name: "question2",
+        title: "Ich fand das Produkt unnötig komplex",
+        isRequired: true,
+        choices: [
+            { value: 1, text: "Stimme überhaupt nicht zu - 1" },
+            { value: 2, text: "2" },
+            { value: 3, text: "3" },
+            { value: 4, text: "4" },
+            { value: 5, text: "Stimme voll und ganz zu - 5" }
+        ],
+        colCount: 5
+    }, {
+        type: "radiogroup",
+        name: "question3",
+        title: "Ich dachte, das Produkt war einfach zu bedienen",
+        isRequired: true,
+        choices: [
+            { value: 1, text: "Stimme überhaupt nicht zu - 1" },
+            { value: 2, text: "2" },
+            { value: 3, text: "3" },
+            { value: 4, text: "4" },
+            { value: 5, text: "Stimme voll und ganz zu - 5" }
+        ],
+        colCount: 5
+    }, {
+        type: "radiogroup",
+        name: "question4",
+        title: "Ich denke, dass ich die Unterstützung einer technischen Person brauche, um dieses Produkt nutzen zu können",
+        isRequired: true,
+        choices: [
+            { value: 1, text: "Stimme überhaupt nicht zu - 1" },
+            { value: 2, text: "2" },
+            { value: 3, text: "3" },
+            { value: 4, text: "4" },
+            { value: 5, text: "Stimme voll und ganz zu - 5" }
+        ],
+        colCount: 5
+    }, {
+        type: "radiogroup",
+        name: "question5",
+        title: "Ich fand, die verschiedenen Funktionen in diesem Produkt waren gut integriert",
+        isRequired: true,
+        choices: [
+            { value: 1, text: "Stimme überhaupt nicht zu - 1" },
+            { value: 2, text: "2" },
+            { value: 3, text: "3" },
+            { value: 4, text: "4" },
+            { value: 5, text: "Stimme voll und ganz zu - 5" }
+        ],
+        colCount: 5
+    }, {
+        type: "radiogroup",
+        name: "question6",
+        title: "Ich dachte, dass dieses Produkt nicht konsistent genug war",
+        isRequired: true,
+        choices: [
+            { value: 1, text: "Stimme überhaupt nicht zu - 1" },
+            { value: 2, text: "2" },
+            { value: 3, text: "3" },
+            { value: 4, text: "4" },
+            { value: 5, text: "Stimme voll und ganz zu - 5" }
+        ],
+        colCount: 5
+    }, {
+        type: "radiogroup",
+        name: "question7",
+        title: "Ich würde mir vorstellen, dass die meisten Leute sehr schnell lernen würden, dieses Produkt zu benutzen",
+        isRequired: true,
+        choices: [
+            { value: 1, text: "Stimme überhaupt nicht zu - 1" },
+            { value: 2, text: "2" },
+            { value: 3, text: "3" },
+            { value: 4, text: "4" },
+            { value: 5, text: "Stimme voll und ganz zu - 5" }
+        ],
+        colCount: 5
+    }, {
+        type: "radiogroup",
+        name: "question8",
+        title: "Ich fand dieses Produkt sehr umständlich zu benutzen",
+        isRequired: true,
+        choices: [
+            { value: 1, text: "Stimme überhaupt nicht zu - 1" },
+            { value: 2, text: "2" },
+            { value: 3, text: "3" },
+            { value: 4, text: "4" },
+            { value: 5, text: "Stimme voll und ganz zu - 5" }
+        ],
+        colCount: 5
+    }, {
+        type: "radiogroup",
+        name: "question9",
+        title: "Ich habe mich sehr selbstsicher gefühlt, dieses Produkt zu verwenden",
+        isRequired: true,
+        choices: [
+            { value: 1, text: "Stimme überhaupt nicht zu - 1" },
+            { value: 2, text: "2" },
+            { value: 3, text: "3" },
+            { value: 4, text: "4" },
+            { value: 5, text: "Stimme voll und ganz zu - 5" }
+        ],
+        colCount: 5
+    }, {
+        type: "radiogroup",
+        name: "question10",
+        title: "Ich musste eine Menge Dinge lernen, bevor ich mit diesem Produkt loslegen konnte",
+        isRequired: true,
+        choices: [
+            { value: 1, text: "Stimme überhaupt nicht zu - 1" },
+            { value: 2, text: "2" },
+            { value: 3, text: "3" },
+            { value: 4, text: "4" },
+            { value: 5, text: "Stimme voll und ganz zu - 5" }
+        ],
+        colCount: 5
+    }]
+};
+const survey = new Survey.Model(surveyJson);
+document.addEventListener("DOMContentLoaded", function() {
+    survey.render(document.getElementById("surveyContainer"));
+});
+</script>
+</html>

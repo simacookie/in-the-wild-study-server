@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        html, body {
+            height: 100%;
+        }
+        
+        body { 
+            padding: 0; 
+            margin: 0; 
+            font-family: Arial, sans-serif;
+            background: #ffffff;           
+            display: flex;            
+            color: #1a1a1a;
+        }
+        
+        .container {
+            text-align: left;            
+            width: 100%;
+            max-width: 1400px;
+            height: 100%;
+        }
+        
+        .heading {           
+            font-size: 1.8rem;
+            font-weight: 400;
+            margin-top: 5px;
+            margin-bottom: 1.5rem;
+            margin-left: 0.7rem;
+            color: #1e293b;
+            text-align: left;
+           
+        }
+        
+        h3 {
+            font-size: 1.125rem;
+            font-weight: 400;
+            margin-bottom: 2rem;
+            color: #6b7280;
+        }
+        
+        .btn {
+            padding: .9rem 2.5rem;
+            background-color: #0f6cbf;
+            color: white;
+            font-size: 1.125rem;
+            font-weight: 600;
+            border-radius: 0.5rem;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+            display: inline-block;
+            letter-spacing: 0.025em;
+        }
+        
+        .btn:hover {
+            background-color: #0d5aa3;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        
+        .btn:active {
+            transform: translateY(0);
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+        }
+                
+        .btn-secondary {
+            background-color: #ffffff;
+        }
+        
+        .btn-secondary:hover{
+            background-color: #e9e9e9;
+        }
+        
+        .btn-container {
+            display: none;
+        }
+        
+        #backBtn {
+            position: absolute;
+            top: 1.5rem;
+            left: 4rem;
+            z-index: 10;
+            width: 50px;
+            height: 50px;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        #backBtn img {
+            width: 24px;
+            height: 24px;
+            object-fit: contain;
+            min-width: 120px;
+        }
+        
+        #continueBtn {
+            position: absolute;
+            bottom: 1rem;
+            right: 2rem;
+            z-index: 10;
+        }
+        
+        /* Tutorial Introduction Screen */
+        .tutorial-intro {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+        
+        .tutorial-intro.hidden {
+            display: none;
+        }
+        
+        .tutorial-intro .content-centered {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .intro-text {
+            font-size: 1.125rem;
+            line-height: 1.6;
+            color: #4b5563;
+            margin-bottom: 2rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            text-align: left;
+        }
+        
+        .content-centered .intro-text {
+            text-align: center;
+        }
+        
+        /* Tutorial Slideshow */
+        .tutorial-slideshow {
+            display: none;
+            height: 100%;
+            flex-direction: column;
+        }
+        
+        .tutorial-slideshow.active {
+            display: flex;
+        }
+        
+        .tutorial-slideshow .content-centered {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 0 2rem;
+        }
+        
+        .tutorial-image-container {
+            width: 100%;
+            max-width: 1200px;
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: white;
+            overflow: visible;
+            position: relative;
+            min-height: 0;
+            max-height: calc(100vh - 90px);
+        }
+        
+        .tutorial-image {
+            max-width: 100%;
+            max-height: 100%;
+            width: auto;
+            height: auto;
+            display: block;
+            object-fit: contain;
+        }
+        
+        .slide-counter {
+            font-size: 1rem;
+            color: #6b7280;
+            margin-bottom: 1rem;
+        }
+        
+        /* VR Nugget Button Screen */
+        .vr-nugget-screen {
+            display: none;
+            flex-direction: column;
+            height: 100%;
+        }
+        
+        .vr-nugget-screen.active {
+            display: flex;
+        }
+        
+        .vr-nugget-screen .content-centered {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        p {
+            margin-top: 2rem;
+            font-size: 0.875rem;
+            color: #6b7280;
+            line-height: 1.6;
+        }
+        
+        p b {
+            color: #1a1a1a;
+        }
+        
+        .content-centered {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Tutorial Introduction Screen -->
+        <div id="tutorialIntro" class="tutorial-intro"> 
+            <p class="heading">VIRTUAL REALITY TRAINING</p>
+            
+            <div class="content-centered">
+                <p class="intro-text">
+                    Zu den Aktivitäten "Injektionsstelle vorbereiten" und "Arzneimittel injezieren" gibt es ein VR-Training, das jetzt durchgeführt werden soll.
+                </p>
+
+                <p class="intro-text">
+                    Bevor das VR-Training startet, gibt es ein Tutorial, das die wichtigsten Funktionen und Steuerungen erklärt.
+                </p>
+
+
+                <button class="btn" onclick="startTutorial()">Tutorial starten</button>
+            </div>
+            
+        </div>
+        
+        <!-- Tutorial Slideshow -->
+        <div id="tutorialSlideshow" class="tutorial-slideshow">    
+            <p class="heading">VIRTUAL REALITY TRAINING - TUTORIAL</p>
+
+            <div class="content-centered">
+                <div class="tutorial-image-container">
+                    <img id="tutorialImage" class="tutorial-image" src="" alt="Tutorial Slide">
+                    <button id="backBtn" class="btn btn-secondary" onclick="previousSlide()">
+                        <img src="images/icons/lessthan.png" alt="Zurück">
+                    </button>
+                    <button id="continueBtn" class="btn" onclick="nextSlide()">Okay</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- VR Nugget Button Screen -->
+        <div id="vrNuggetScreen" class="vr-nugget-screen">
+            <p class="heading">VIRTUAL REALITY TRAINING - STARTEN</p>
+                        
+            <div class="content-centered">
+                <button class="btn" onclick="startVRNugget()">VR Nugget starten</button>
+            </div>
+            
+        </div>
+    </div>
+    
+    <script>
+        // Tutorial configuration
+        const TOTAL_SLIDES = 6;
+        let currentSlideIndex = 0;
+        
+        // Cookie handling function
+        function getCookie(name) {
+            const nameEQ = name + "=";
+            const ca = document.cookie.split(';');
+            for (let i = 0; i < ca.length; i++) {
+                let c = ca[i];
+                while (c.charAt(0) === ' ') c = c.substring(1, c.length);
+                if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
+            }
+            return null;
+        }
+        
+        function startTutorial() {
+            // Hide intro screen
+            document.getElementById('tutorialIntro').classList.add('hidden');
+            
+            // Show slideshow
+            document.getElementById('tutorialSlideshow').classList.add('active');
+            
+            // Load first slide
+            loadSlide(0);
+        }
+        
+        function loadSlide(index) {
+            currentSlideIndex = index;
+            
+            // Update image source with correct filename format
+            const imagePath = `images/tutorial/Tutorial__Page ${index + 1}.png`;
+            document.getElementById('tutorialImage').src = imagePath;
+            
+            // Update button states
+            const backBtn = document.getElementById('backBtn');
+            const continueBtn = document.getElementById('continueBtn');
+            
+            
+        }        
+        function previousSlide() {
+        
+            if (currentSlideIndex > 0) {
+                loadSlide(currentSlideIndex - 1);
+            }
+            else {
+                document.getElementById('tutorialSlideshow').classList.remove('active');
+                document.getElementById('tutorialSlideshow').classList.add('hidden');
+                document.getElementById('tutorialIntro').classList.remove('hidden');
+                document.getElementById('tutorialIntro').classList.add('active');
+            }
+        }
+        
+        function nextSlide() {
+            if (currentSlideIndex < TOTAL_SLIDES - 1) {
+                loadSlide(currentSlideIndex + 1);
+            } else {
+                // Last slide - show VR Nugget button
+                finishTutorial();
+            }
+        }
+        
+        function finishTutorial() {
+            // Hide slideshow
+            document.getElementById('tutorialSlideshow').classList.remove('active');
+            
+            // Show VR Nugget screen
+            document.getElementById('vrNuggetScreen').classList.add('active');
+        }
+        
+        function startVRNugget() {
+            // Get user_id from cookie
+            const userId = getCookie('user_id');
+            
+            // Build URL with user_id parameter
+            let linkUrl = 'https://webxr.imis.uni-luebeck.de/vr-nugget/';
+            if (userId) {
+                linkUrl += '?id=' + encodeURIComponent(userId);
+            }
+            
+            let sendToQuestUrl = new URL("https://oculus.com/open_url/")
+            sendToQuestUrl.searchParams.set("url", linkUrl)
+            // Open VR Nugget in new window/tab
+            window.open(sendToQuestUrl, '_blank');
+        }
+    </script>
+</body>
+</html>
